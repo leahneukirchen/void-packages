@@ -177,7 +177,7 @@ do_configure() {
 		perl -Ilib make_patchnum.pl
 	else
 		./Configure -des ${_args} -Dlibperl="libperl.so.${version%.*}" \
-			-Dcccdlflags="-fPIC" -Doptimize="$CFLAGS"
+			-Dcccdlflags="-fPIC" -Doptimize="$CFLAGS" -Dcc="$CC"
 	fi
 }
 
