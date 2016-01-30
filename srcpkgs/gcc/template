@@ -48,6 +48,7 @@ case "$XBPS_TARGET_MACHINE" in
 	i686-musl) _triplet="i686-linux-musl";;
 	x86_64) _triplet="x86_64-unknown-linux-gnu";;
 	x86_64-musl) _triplet="x86_64-linux-musl";;
+	x86_64-llvm-musl) _triplet="x86_64-linux-musl";;
 	armv5tel) _triplet="arm-linux-gnueabi";;
 	armv5tel-musl) _triplet="arm-linux-musleabi";;
 	armv6l) _triplet="arm-linux-gnueabihf";;
@@ -191,10 +192,15 @@ do_install() {
 	ln -sfr ${DESTDIR}/usr/include/c++/${_majorver} \
 		${DESTDIR}/usr/include/c++/${version}
 
-	# cc symlink.
-	ln -sfr ${DESTDIR}/usr/bin/gcc ${DESTDIR}/usr/bin/cc
-	# rpcgen wants /lib/cpp, make a symlink
-	ln -sfr ${DESTDIR}/usr/bin/cpp ${DESTDIR}/usr/lib/cpp
+	case "$XBPS_TARGET_MACHINE" in
+		*llvm*) : ;;
+		*)
+			# cc symlink.
+			ln -sfr ${DESTDIR}/usr/bin/gcc ${DESTDIR}/usr/bin/cc
+			# rpcgen wants /lib/cpp, make a symlink
+			ln -sfr ${DESTDIR}/usr/bin/cpp ${DESTDIR}/usr/lib/cpp
+			;;
+	esac
 
 	if [ -e ${DESTDIR}/usr/lib64 ]; then
 		rm -f ${DESTDIR}/usr/lib64
