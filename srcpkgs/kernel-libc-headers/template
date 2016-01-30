@@ -26,10 +26,10 @@ esac
 
 do_build() {
 	make mrproper
-	make ARCH=${_arch} headers_check
+	make HOSTCC=${BUILD_CC} ARCH=${_arch} headers_check
 }
 do_install() {
-	make ARCH=${_arch} INSTALL_HDR_PATH=${DESTDIR}/usr headers_install
+	make HOSTCC=${BUILD_CC} ARCH=${_arch} INSTALL_HDR_PATH=${DESTDIR}/usr headers_install
 	# Remove unused files.
 	rm -f $(find ${DESTDIR}/usr/include -name .install -or -name ..install.cmd)
 	# Remove drm headers, use libdrm.
