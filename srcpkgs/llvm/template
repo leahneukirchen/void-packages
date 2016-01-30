@@ -8,6 +8,17 @@ configure_args="--disable-expensive-checks --disable-debug-runtime
  --enable-bindings=none --enable-optimized --enable-shared --enable-libffi
  --enable-llvmc-dynamic --disable-assertions --enable-keep-symbols
  --enable-experimental-targets=AMDGPU"
+case "$XBPS_MACHINE:$XBPS_TARGET_MACHINE" in
+*llvm*:*llvm*)
+	configure_args+=" --enable-libcpp"
+	makedepends+=" libcxx-devel libcxxabi-devel"
+esac
+if [ -n "$CROSS_BUILD" ]; then
+	case "$XBPS_TARGET_MACHINE" in
+	*llvm*)
+		hostmakedepends+=" clang"
+	esac
+fi
 short_desc="Low Level Virtual Machine"
 maintainer="Juan RP <xtraeme@voidlinux.eu>"
 homepage="http://www.llvm.org"
@@ -27,7 +38,7 @@ checksum="
 
 # XXX Investigate ocaml bindings.
 hostmakedepends="groff perl python zlib-devel libffi-devel swig"
-makedepends="python-devel zlib-devel libffi-devel libedit-devel"
+makedepends+=" python-devel zlib-devel libffi-devel libedit-devel"
 
 subpackages="clang clang-analyzer libllvm3.7 llvm-doc"
 if [ -z "$CROSS_BUILD" ]; then
@@ -61,6 +72,10 @@ post_extract() {
 		msg_normal "Applying $i to cfe\n"
 		patch -sNp1 -i ${i}
 	done
+	case "$XBPS_TARGET_MACHINE" in
+	*llvm*)
+		patch -sNp1 -i "${FILESDIR}/patches/cfe/llvm-musl-defaults.patch"
+	esac
 
 	cd ${XBPS_BUILDDIR}/lldb-${version}.src
 	for i in ${FILESDIR}/patches/lldb/*.patch; do
@@ -100,6 +115,14 @@ do_configure() {
 	mkdir build
 	cd build
 	../configure ${configure_args}
+
+	case "$XBPS_MACHINE:$XBPS_TARGET_MACHINE" in
+	*llvm*:*llvm*)
+		;;
+	*:*llvm*)
+		echo 'CFLAGS += -static-libgcc' >>Makefile.config
+		echo 'CXXFLAGS += -static-libgcc -static-libstdc++' >>Makefile.config
+	esac
 }
 
 do_build() {
@@ -131,6 +154,28 @@ do_install() {
 
 	ln -s /usr/bin/clang ${DESTDIR}/usr/bin/clang-cpp
 
+	case "$XBPS_TARGET_MACHINE" in
+	*llvm*)
+		# cc symlink.
+		ln -sfr ${DESTDIR}/usr/bin/clang ${DESTDIR}/usr/bin/cc
+		# rpcgen wants /lib/cpp, make a symlink
+		ln -sfr ${DESTDIR}/usr/bin/clang ${DESTDIR}/usr/lib/cpp
+
+		# crtstuff stubs, can be empty on musl
+		${CC} -c -o empty.o -x c /dev/null
+		vinstall empty.o 0644 usr/lib/clang/${version} crtbegin.o
+		vinstall empty.o 0644 usr/lib/clang/${version} crtbeginS.o
+		vinstall empty.o 0644 usr/lib/clang/${version} crtbeginT.o
+		vinstall empty.o 0644 usr/lib/clang/${version} crtend.o
+		vinstall empty.o 0644 usr/lib/clang/${version} crtendS.o
+
+		if [ -n "$CROSS_BUILD" ]; then
+			# XXX hack: steal host compiler-rt
+			vmkdir usr/lib/clang/3.7.1/lib/linux
+			cp /usr/lib/clang/*/lib/linux/* ${DESTDIR}/usr/lib/clang/3.7.1/lib/linux
+		fi
+        esac    
+
 	# Remove llvm-config-host in cross builds.
 	if [ "$CROSS_BUILD" ]; then
 		rm -f ${DESTDIR}/usr/bin/llvm-config-host
@@ -158,14 +203,21 @@ clang-analyzer_package() {
 }
 clang_package() {
 	lib32disabled=yes
-	depends="libstdc++-devel libgcc-devel binutils"
+	depends="binutils"
 	case "$XBPS_TARGET_MACHINE" in
-		*-musl) depends+=" musl-devel";;
-		*) depends+=" glibc-devel";;
+		*-llvm-musl) depends+=" libcxx-devel llvm-libunwind-devel musl-devel";;
+		*-musl) depends+=" libstdc++-devel libgcc-devel musl-devel";;
+		*) depends+=" libstdc++-devel libgcc-devel glibc-devel";;
 	esac
 	short_desc+=" - C language family frontend"
 	homepage="http://clang.llvm.org/"
 	pkg_install() {
+		case "$XBPS_TARGET_MACHINE" in
+		*-llvm-musl)
+			vmove usr/bin/cc
+			vmove usr/lib/cpp
+		esac
+
 		vmove usr/include/clang
 		vmove "usr/bin/*clang*"
 		vmove usr/bin/c-index-test
