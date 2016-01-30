@@ -11,10 +11,15 @@ license="MIT"
 homepage="http://www.musl-libc.org/"
 distfiles="http://www.musl-libc.org/releases/musl-${version}.tar.gz"
 checksum=720b83c7e276b4b679c0bffe9509340d5f81fd601508e607e708177df0d31c0e
+ 
+case "$XBPS_MACHINE:$XBPS_TARGET_MACHINE" in  
+*llvm*:*llvm*)
+	make_build_args="LIBCC=/usr/lib/clang/*/lib/*/libclang_rt.builtins-*.a"
+esac
 
 nostrip_files="libc.so"
 shlib_provides="libc.so"
-only_for_archs="i686-musl x86_64-musl armv5tel-musl armv6l-musl armv7l-musl aarch64-musl mips-musl mipsel-musl"
+only_for_archs="i686-musl x86_64-musl x86_64-llvm-musl armv5tel-musl armv6l-musl armv7l-musl aarch64-musl mips-musl mipsel-musl"
 
 post_build() {
 	$CC $CFLAGS $LDFLAGS ${FILESDIR}/getent.c -o getent
