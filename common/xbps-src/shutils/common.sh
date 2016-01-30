@@ -423,6 +423,14 @@ setup_pkg() {
         export OBJCOPY="objcopy"
         export NM="nm"
         export READELF="readelf"
+
+        case "$XBPS_TARGET_MACHINE" in
+        *llvm*)
+            export CC="clang"
+            export CXX="clang++"
+            export CPP="clang-cpp"
+            export GCC="$CC"
+        esac
     fi
 
     set_build_options
