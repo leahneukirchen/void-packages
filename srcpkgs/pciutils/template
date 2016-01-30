@@ -13,15 +13,17 @@ distfiles="ftp://atrey.karlin.mff.cuni.cz/pub/linux/pci/${pkgname}-${version}.ta
 checksum=0196624282c33a9bcd4bd097d4100271c82af47797ecd7488ef2711fa5f043b2
 
 do_build() {
+	_host=${XBPS_TARGET_MACHINE%-llvm-musl}
+	_host=${_host%-musl}-linux
 	make OPT="${CFLAGS}" SHARED=no AR=${AR} \
 		RANLIB=${RANLIB} PREFIX=/usr CC=${CC} \
-		HOST=${XBPS_TARGET_MACHINE%-musl}-linux ZLIB=yes \
+		HOST=${_host} ZLIB=yes \
 		SHAREDIR=/usr/share/hwdata MANDIR=/usr/share/man all
 	cp lib/libpci.a ${XBPS_MASTERDIR}/tmp
 	make clean
 	make OPT="${CFLAGS}" SHARED=yes AR=${AR} \
 		RANLIB=${RANLIB} PREFIX=/usr CC=${CC} \
-		HOST=${XBPS_TARGET_MACHINE%-musl}-linux ZLIB=yes \
+		HOST=${_host} ZLIB=yes \
 		SHAREDIR=/usr/share/hwdata MANDIR=/usr/share/man all
 }
 
