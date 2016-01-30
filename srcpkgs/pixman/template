@@ -15,6 +15,7 @@ checksum=5c63dbb3523fc4d86ed4186677815918a941b7cb390d5eec4f55cb5d66b59fb1
 pre_configure() {
 	case "$XBPS_TARGET_MACHINE" in
 		arm*) configure_args+=" --disable-arm-iwmmxt --disable-arm-iwmmxt2";;
+		*-llvm-*) configure_args+=" --disable-mmx";;  # broken asm
 	esac
 }
 post_install() {
