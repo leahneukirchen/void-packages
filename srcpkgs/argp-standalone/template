@@ -10,9 +10,9 @@ license="Public Domain"
 distfiles="http://www.lysator.liu.se/~nisse/misc/argp-standalone-${version}.tar.gz"
 checksum=dec79694da1319acd2238ce95df57f3680fea2482096e483323fddf3d818d8be
 
-only_for_archs="i686-musl x86_64-musl armv5tel-musl armv6l-musl armv7l-musl aarch64-musl mipsel-musl"
+only_for_archs="i686-musl x86_64-musl x86_64-llvm-musl armv5tel-musl armv6l-musl armv7l-musl aarch64-musl mipsel-musl"
 
-CFLAGS="-fPIC"
+CFLAGS="-fPIC -std=c89"
 
 do_install() {
 	vinstall ${wrksrc}/libargp.a 644 usr/lib
