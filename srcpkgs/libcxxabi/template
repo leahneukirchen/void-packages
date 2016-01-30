@@ -1,0 +1,30 @@
+# Template file for 'libcxxiabi'
+pkgname=libcxxabi
+version=3.7.1
+revision=1
+build_style=cmake
+hostmakedepends="cmake"
+makedepends="llvm llvm-libunwind-devel"
+LDFLAGS="-Wl,--no-as-needed -lunwind -Wl,--as-needed"
+short_desc="Low-level support for libc++ standard library"
+maintainer="Juan RP <xtraeme@voidlinux.eu>"
+homepage="http://libcxxabi.llvm.org"
+license="BSD"
+distfiles="http://www.llvm.org/releases/${version}/${pkgname}-${version}.src.tar.xz"
+checksum=a47faaed90f577da8ca3b5f044be9458d354a53fab03003a44085a912b73ab2a
+wrksrc=${pkgname}-${version}.src
+
+post_install() {
+	vmkdir usr/include
+	vcopy include/* usr/include
+}
+
+libcxxabi-devel_package() {
+	short_desc+=" - development files"
+	depends="${sourcepkg}>=${version}_${revision}"
+	pkg_install() {
+		vmove "usr/lib/*.a"
+		vmove "usr/lib/*.so"
+		vmove "usr/include"
+	}
+}
