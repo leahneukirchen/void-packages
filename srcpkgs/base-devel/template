@@ -4,11 +4,12 @@ version=20150820
 revision=1
 build_style=meta
 noarch=yes
-depends="autoconf automake bc binutils bison ed flex gcc gcc-c++ gettext
+depends="autoconf automake bc binutils bison ed flex gettext
  groff libtool m4 make patch pkg-config texinfo unzip xz"
 case "$XBPS_TARGET_MACHINE" in
-	*-musl) depends+=" musl";;
-	*) depends+=" glibc-devel";;
+	*-llvm-musl) depends+=" clang musl";;
+	*-musl) depends+=" gcc gcc-c++ musl";;
+	*) depends+=" gcc gcc-c++ glibc-devel";;
 esac
 short_desc="Void Linux development tools meta package"
 maintainer="Christian Neukirchen <chneukirchen@gmail.com>"
