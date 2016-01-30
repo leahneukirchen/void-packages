@@ -1,20 +1,40 @@
 # Template file for 'libcxx'
 pkgname=libcxx
-version=3.6.2
+version=3.7.1
 revision=1
 build_style=cmake
 hostmakedepends="cmake"
+makedepends="llvm-libunwind-devel"
+case "$XBPS_MACHINE:$XBPS_TARGET_MACHINE" in
+*llvm*:*llvm*)
+	makedepends+=" libcxxabi-devel"
+	configure_args="-DLIBCXX_CXX_ABI=libcxxabi -DLIBCXX_ENABLE_STATIC_ABI_LIBRARY=ON"
+esac
+LDFLAGS="-Wl,--no-as-needed -lunwind -Wl,--as-needed"
+make_build_args="VERBOSE=1"
 short_desc="New implementation of the C++ standard library, targeting C++11"
 maintainer="Juan RP <xtraeme@voidlinux.eu>"
 homepage="http://libcxx.llvm.org"
 license="BSD"
 distfiles="http://www.llvm.org/releases/${version}/${pkgname}-${version}.src.tar.xz"
-checksum=52f3d452f48209c9df1792158fdbd7f3e98ed9bca8ebb51fcd524f67437c8b81
+checksum="357fbd4288ce99733ba06ae2bec6f503413d258aeebaab8b6a791201e6f7f144"
 wrksrc=${pkgname}-${version}.src
+
+post_extract() {
+	case "$XBPS_TARGET_MACHINE" in
+	*-musl) patch -Np1 <${FILESDIR}/libcxx-0001-musl-hacks.patch
+	esac
+	case "$XBPS_TARGET_MACHINE" in
+	*llvm*) sed -i /gcc_s/d cmake/config-ix.cmake
+	esac
+}
 
 libcxx-devel_package() {
 	short_desc+=" - development files"
 	depends="${sourcepkg}>=${version}_${revision}"
+	case "$CC" in
+		*clang*) depends+=" libcxxabi-devel"
+	esac
 	pkg_install() {
 		vmove usr/include
 		vmove "usr/lib/*.so"
