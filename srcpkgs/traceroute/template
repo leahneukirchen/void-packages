@@ -13,7 +13,7 @@ do_build() {
 	if [ "$CROSS_BUILD" ]; then
 		make LDFLAGS="-L${wrksrc}/libsupp $LDFLAGS" CFLAGS="$CFLAGS $CPPFLAGS" CROSS=${XBPS_CROSS_TRIPLET}- ${makejobs}
 	else
-		make CFLAGS="$CFLAGS $CPPFLAGS" LDFLAGS="$LDFLAGS" ${makejobs}
+		make CC="$CC" CFLAGS="$CFLAGS $CPPFLAGS" LDFLAGS="$LDFLAGS" ${makejobs}
 	fi
 }
 do_install() {
