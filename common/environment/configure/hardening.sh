@@ -12,12 +12,26 @@ case "$XBPS_TARGET_MACHINE" in
 	mips-musl|mipsel-musl) # PIE support broken
 		nopie=yes
 		;;
+	*llvm*)
+		case "$XBPS_MACHINE" in
+			*llvm*) ;;
+			*) nopie=yes ;;
+		esac
+		;;
 esac
 
 if [ -z "$nopie" ]; then
+	case "$XBPS_TARGET_MACHINE" in
+		*llvm*)
+			CFLAGS="-fpie $CFLAGS"
+			CXXFLAGS="-fpie $CFLAGS"
+			LDFLAGS="-Wl,-z,now -pie -fpie $LDFLAGS"
+			;;
+		*)
 	_GCCSPECSDIR=${XBPS_COMMONDIR}/environment/configure/gccspecs
 	CFLAGS="-specs=${_GCCSPECSDIR}/hardened-cc1 $CFLAGS"
 	CXXFLAGS="-specs=${_GCCSPECSDIR}/hardened-cc1 $CXXFLAGS"
 	# We pass -z relro -z now here too, because libtool drops -specs...
 	LDFLAGS="-specs=${_GCCSPECSDIR}/hardened-ld -Wl,-z,relro -Wl,-z,now $LDFLAGS"
+	esac
 fi
