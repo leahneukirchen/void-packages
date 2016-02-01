@@ -209,6 +209,10 @@ clang_package() {
 		*-musl) depends+=" libstdc++-devel libgcc-devel musl-devel";;
 		*) depends+=" libstdc++-devel libgcc-devel glibc-devel";;
 	esac
+	case "$XBPS_MACHINE:$XBPS_TARGET_MACHINE" in
+	*llvm*:*llvm*)
+		depends+=" libcxxabi-devel"
+	esac
 	short_desc+=" - C language family frontend"
 	homepage="http://clang.llvm.org/"
 	pkg_install() {
