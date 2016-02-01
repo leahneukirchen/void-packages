@@ -17,7 +17,7 @@ do_build() {
 	if [ -n "$XBPS_CROSS_TRIPLET" ]; then
 		make HOSTSTRIP=: HOSTCC="$XBPS_CROSS_TRIPLET-gcc" tools
 	else
-		make HOSTSTRIP=: tools
+		make HOSTSTRIP=: HOSTCC="$CC" tools
 	fi
 }
 
