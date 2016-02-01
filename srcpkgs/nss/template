@@ -27,7 +27,7 @@ do_build() {
 
 	cd nss
 	# Build nsinstall for host.
-	make ${_use64} -C coreconf
+	make CC="$BUILD_CC" CCC="$BUILD_CXX" ${_use64} -C coreconf
 
 	if [ "$CROSS_BUILD" ]; then
 		case "$XBPS_TARGET_MACHINE" in
@@ -53,8 +53,8 @@ do_build() {
 		export NSPR_LIB_DIR=/usr/lib
 		export XCFLAGS="${CFLAGS}"
 
-		make ${_use64} -C lib/dbm
-		make ${_use64}
+		make CC="$CC" CCC="$CXX" ${_use64} -C lib/dbm
+		make CC="$CC" CCC="$CXX" ${_use64}
 	fi
 }
 
