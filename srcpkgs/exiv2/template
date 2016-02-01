@@ -11,10 +11,6 @@ homepage="http://www.exiv2.org"
 distfiles="${homepage}/exiv2-$version.tar.gz"
 checksum=c80bfc778a15fdb06f71265db2c3d49d8493c382e516cb99b8c9f9cbde36efa4
 
-post_extract() {
-	sed -i 's/__gnu_linux__/__GLIBC__/g' include/exiv2/config.h
-}
-
 exiv2-devel_package() {
 	depends="${makedepends} ${sourcepkg}-${version}_${revision}"
 	short_desc+=" - development files"
