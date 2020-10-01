@@ -3,8 +3,6 @@ flags:
     production: true
     assistant: true
     pairing: true
-    s3: true
-    webdav: true
     torrentparser: true
     webapp: true
     magicmime: false
@@ -20,10 +18,11 @@ extra-deps:
  - bloomfilter-2.0.1.0
  - filepath-bytestring-1.4.2.1.6
  - sandi-0.5
- - tasty-rerun-1.1.17
  - torrent-10000.1.1
  - bencode-0.6.1.1@sha256:55b2f5653738754182c124caa8ba2eb533dfaf24fa2c4c73438edee406188b22,1930
  - network-multicast-0.3.2@sha256:521547635a6afae408ec25193b3e429082dc0442668dac7ad5cea76ccee39750,979
+ - git-lfs-1.1.0@sha256:ad7a83906a765e1620b4b0ac67eb89adc1fa141265fc96b99abd5f8345f80d10,813
+ - http-client-restricted-0.0.3@sha256:686426d78dd6f4c50355c77595139a3702104856588a4d097ee56b7d70bb2f6d,1230
 explicit-setup-deps:
   git-annex: true
-resolver: lts-15.4
+resolver: lts-16.16
