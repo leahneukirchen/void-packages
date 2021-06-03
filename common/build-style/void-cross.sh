@@ -617,7 +617,7 @@ do_install() {
 	rm -vf ${DESTDIR}/${adalib}/libgna{rl,t}.so
 
 	# Remove unnecessary libatomic which is only built for gccgo
-	rm -rf ${DESTDIR}/${sysroot}/usr/lib/libatomic.*
+	#rm -rf ${DESTDIR}/${sysroot}/usr/lib/libatomic.*
 
 	# If libquadmath was forced (needed for gfortran on some platforms)
 	# then remove it because it conflicts with libquadmath package
