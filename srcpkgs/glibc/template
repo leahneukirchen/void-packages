@@ -96,7 +96,7 @@ do_configure() {
 		--bindir=/usr/bin --sbindir=/usr/bin \
 		--libdir=${_libdir} --libexecdir=${_libdir} \
 		--enable-add-ons=libidn \
-		--enable-multi-arch --enable-bind-now \
+		--disable-multi-arch --enable-bind-now \
 		--disable-profile --enable-kernel=3.2.0 \
 		--enable-stack-guard-randomization \
 		--without-selinux --without-cvs --without-gd \
