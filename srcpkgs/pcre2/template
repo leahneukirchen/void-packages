@@ -15,6 +15,10 @@ homepage="http://www.pcre.org/"
 distfiles="https://ftp.pcre.org/pub/pcre/pcre2-${version}.tar.gz"
 checksum=b95ddb9414f91a967a887d69617059fb672b914f56fa3d613812c1ee8e8a1a37
 
+case "$XBPS_TARGET_MACHINE" in
+        riscv64*) configure_args+=" --disable-jit";;
+esac
+
 post_install() {
 	vlicense LICENCE
 }
