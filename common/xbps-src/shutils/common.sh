@@ -271,6 +271,7 @@ get_endian() {
         mips*)    echo "be";;
         ppc*le)   echo "le";;
         ppc*)     echo "be";;
+        riscv64*) echo "le";;
         x86_64)   echo "le";;
     esac
 }
@@ -298,6 +299,7 @@ get_wordsize() {
         mips*)    echo "32";;
         ppc64*)   echo "64";;
         ppc*)     echo "32";;
+        riscv64*) echo "64";;
         x86_64)   echo "64";;
     esac
 }
