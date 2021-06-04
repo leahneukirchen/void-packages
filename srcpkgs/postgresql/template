@@ -34,6 +34,10 @@ postgres_shell="/bin/sh"
 postgres_descr="PostgreSQL database server user"
 make_dirs="/var/lib/postgresql 0750 postgres postgres"
 
+case "$XBPS_TARGET_MACHINE" in
+        riscv64*) configure_args+=" --disable-spinlocks";;  # NYI
+esac
+
 if [ "$CROSS_BUILD" ]; then
 	configure_args+=" --without-perl --without-python --without-tcl"
 fi
