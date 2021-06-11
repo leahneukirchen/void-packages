@@ -597,16 +597,17 @@ libvtv_package() {
 libatomic-devel_package() {
 	depends="libatomic>=${_minorver}"
 	short_desc+=" - Atomics library - development files"
+	build_style=meta
 	pkg_install() {
-		vmove usr/lib/libatomic.a
-		vmove usr/lib/libatomic.so
+		return
 	}
 }
 
 libatomic_package() {
 	short_desc+=" - Atomics library"
+	build_style=meta
 	pkg_install() {
-		vmove usr/lib/libatomic.so.*
+		return
 	}
 }
 
@@ -616,6 +617,9 @@ libgcc_package() {
 	noverifyrdeps=yes
 	pkg_install() {
 		vmove "usr/lib/libgcc_s.so*"
+		vmove usr/lib/libatomic.so.*
+		vmove usr/lib/libatomic.a
+		vmove usr/lib/libatomic.so
 		vlicense ${wrksrc}/COPYING.RUNTIME RUNTIME.LIBRARY.EXCEPTION
 	}
 }
