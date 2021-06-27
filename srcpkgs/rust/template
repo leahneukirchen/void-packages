@@ -242,6 +242,7 @@ do_configure() {
 		_use_rpath="false"
 		_use_docs="true"
 	fi
+	_use_docs="false"
 
 	cat > config.toml <<- EOF
 		[build]
@@ -351,8 +352,8 @@ do_install() {
 	 -C "$DESTDIR/usr/lib" --strip-components=3 --exclude=manifest.in
 	tar xf build/dist/rustc-dev-${version}-${RUST_TARGET}.tar.gz \
 	 -C "$DESTDIR/usr/lib" --strip-components=3 --exclude=manifest.in
-	tar xf build/dist/rust-docs-${version}-${RUST_TARGET}.tar.gz \
-	 -C "$DESTDIR/usr" --strip-components=2 --exclude=manifest.in
+	#tar xf build/dist/rust-docs-${version}-${RUST_TARGET}.tar.gz \
+	# -C "$DESTDIR/usr" --strip-components=2 --exclude=manifest.in
 
 	vlicense COPYRIGHT
 	vlicense LICENSE-APACHE
