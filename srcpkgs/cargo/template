@@ -81,6 +81,10 @@ case "$XBPS_MACHINE" in
 		checksum+="
 		 234cf0792407065f4c5c4276886846cee2ecfb37eea1171c2c6e4a0fba7d324c"
 		;;
+	riscv64)
+		checksum+="
+		 1de7b64e20a09f1ebe90492cb59557bf828414f7c2c9102a88fedf8050c0088c"
+		;;
 	*) broken="bootstrap binary unavailable for ${XBPS_MACHINE}";;
 esac
 
