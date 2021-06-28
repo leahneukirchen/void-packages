@@ -58,7 +58,7 @@ _libomp_enable=no
 
 case "$XBPS_TARGET_MACHINE" in
 	ppc64le*) ;;
-	ppc*|i686*) _lldb_enable=no ;;
+	ppc*|i686*|riscv64*) _lldb_enable=no ;;
 esac
 
 case "$XBPS_TARGET_MACHINE" in
@@ -127,7 +127,7 @@ post_patch() {
 			vsed -i 's,# Set common link flags.,list(APPEND SANITIZER_COMMON_LINK_LIBS execinfo),' \
 				${wrksrc}/compiler-rt/CMakeLists.txt
 			;;
-		arm*-musl|i686-musl) # sanitizer code is broken since it duplicates some libc bits
+		arm*-musl|i686-musl|riscv64*) # sanitizer code is broken since it duplicates some libc bits
 			vsed -i 's/set(COMPILER_RT_HAS_SANITIZER_COMMON TRUE)/set(COMPILER_RT_HAS_SANITIZER_COMMON FALSE)/' \
 				${wrksrc}/compiler-rt/cmake/config-ix.cmake
 			;;
