@@ -192,9 +192,10 @@ perf_package() {
 		vmove usr/lib/perf
 		vmove usr/libexec/perf-core
 		vmove usr/share/bash-completion/completions/perf
-		if ! [ "${XBPS_TARGET_MACHINE/-musl/}" = i686 ]; then
-			vmove usr/share/perf-core
-		fi
+		case "$XBPS_TARGET_MACHINE" in
+			i686*|riscv64*) ;;
+			*) vmove usr/share/perf-core
+		esac
 		vmove /usr/share/doc/perf-tip
 		vmove "usr/share/man/man1/perf*"
 	}
