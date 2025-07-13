@@ -1,0 +1,35 @@
+# Template file for 'sysklogd'
+pkgname=sysklogd
+version=2.7.2
+revision=1
+build_style=gnu-configure
+configure_args="--without-logger"
+conf_files="/etc/syslog.conf"
+make_dirs="/etc/syslog.d 0755 root root"
+depends="gzip"
+short_desc="Syslog daemon with full RFC3164 and RFC5424 support"
+maintainer="Leah Neukirchen <leah@vuxu.org>"
+license="BSD-3-Clause"
+homepage="https://github.com/troglobit/sysklogd"
+distfiles="https://github.com/troglobit/sysklogd/releases/download/v${version}/sysklogd-${version}.tar.gz"
+checksum=bc410ca64551a11fac6518b418fb6b8afbd888a70af2c5eb353334a706727bca
+make_check="no"  # needs namespaces
+
+libsyslog-devel_package() {
+	short_desc+=" - development files"
+	depends="${sourcepkg}>=${version}_${revision}"
+	pkg_install() {
+		vmove usr/include
+		vmove usr/lib/*.a
+		vmove usr/lib/*.so
+		vmove usr/lib/pkgconfig
+		vmove usr/share/man/man3
+	}
+}
+
+post_install() {
+	vlicense LICENSE
+
+	rm -r ${DESTDIR}/usr/share/doc
+	vconf syslog.conf
+}
